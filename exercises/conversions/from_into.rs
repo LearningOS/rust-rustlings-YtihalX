@@ -35,10 +35,34 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of Person
 // Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
-
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        let mut result = Person::default();
+        let mut roxy = s.split(',');
+        match roxy.next() {
+            Some(s) => {
+                if !s.is_empty() {
+                    result.name = s.to_owned();
+                } else {
+                    return result;
+                }
+            }
+            _ => return result,
+        }
+        match roxy.next() {
+            Some(s) => {
+                if let Ok(age) = s.parse() {
+                    result.age = age;
+                } else {
+                    return Person::default();
+                }
+            }
+            None => return Person::default(),
+        }
+        match roxy.next() {
+            None => result,
+            _ => Person::default(),
+        }
     }
 }
 
